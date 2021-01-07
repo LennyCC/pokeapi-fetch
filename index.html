@@ -33,19 +33,57 @@
             <option value="ariados">Ariados</option>
           </select>
     </div>
-    <script>
-        function getNewPokemon(event) {
-        // Hacer que cada vez que se cambie el valor del select, se invoque esta función. Hacer una llamada con la Fetch API al endpoint para obtener los pokemons por nombre de pokemon. Debeis usar su nombre de pokemon como parte dinámica de la URL
+    <script src="https://pokeapi.co/api/v2/pokemon/"></script>
 
+    <script>
+        //hacer que cada vez que se cambie el valor del select se invoque esa función
+        //let select = document.querySelector('.form-select')
+        //const P = new Pokedex.Pokedex()
+        const Poke = document.querySelector('.form-select')
+        let button = document.querySelector('.btn')
+
+        Poke.addEventListener('change', getNewPokemon)
+        button.addEventListener('click', changeToShiny)
+
+        
+        let url_original = "https://pokeapi.co/api/v2/pokemon/"//${nombrePokemon}`
+        let url_shiny = ""
+        
+        function getNewPokemon(event) {
+        // Hacer que cada vez que se cambie el valor del select, se invoque esta función.
+        // Hacer una llamada con la Fetch API al endpoint para obtener los pokemons por 
+        //nombre de pokemon. Debeis usar su nombre de pokemon como parte dinámica de la URL
+            //const ajax = new XMLHttpRequest;
+            //const url = 'https://pokeapi.co/api/v2/pokemon/ditto'    
+            let nombrePokemon = event.target.value
+            let url = url_original + nombrePokemon
+
+            fetch(url).
+            then(response =>  response.json()).
+            then(data => updatePokemon(data))
+             /*    */           
         }
 
-        function updatePokemon(response) {
-            // cuando se ha completado el Fetch, este debe hacer una llamada a esta función pasando por parámetro los datos recibidos.
-            // La función debe actualizar los elementos del DOM: imagen del pokemon, nombre, y guardar en algun lugar la ruta a la foto "shiny" del pokemon
+        function updatePokemon(data) {
+            // cuando se ha completado el Fetch, este debe hacer una llamada a esta función
+            // pasando por parámetro los datos recibidos.
+            // La función debe actualizar los elementos del DOM: imagen del pokemon, nombre, y
+            // guardar en algun lugar la ruta a la foto "shiny" del pokemon
+            console.log(data)
+            document.querySelector('.card-img-top').classList.remove('d-none')
+            document.querySelector('.card-img-top').src = data.sprites.front_default
+            document.querySelector('.card-img-top').setAttribute('data-shiny-url', response.sprites.front_shiny )
+            document.querySelector('.card-title').textContent = data.name;
+            url_shiny = 'data.sprites.front_shiny'
         }
 
         function changeToShiny() {
-            // esta función debe ser llamada al hacer clic en el botón "Change to Shiny"; de manera que actualice la imagen a la versión "shiny" del Pokemon
+            // esta función debe ser llamada al hacer clic en el botón "Change to Shiny"; 
+            //de manera que actualice la imagen a la versión "shiny" del Pokemon
+            let img = document.querySelector('.card-img-top')
+            img.src = img.getAttribute('data-shiny-url')
+            //llamar otra vez a la API !!!?vigilar si los datos son miles
+            //document.querySelector('.card-img-top').src = url_shiny
         }
 
     </script>
